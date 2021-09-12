@@ -5,6 +5,68 @@
     <TargetFramework>net5.0-windows</TargetFramework>
     <RootNamespace>Resin_Tracker</RootNamespace>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon />
+    <Win32Resource />
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Fonts\**" />
+    <EmbeddedResource Remove="Fonts\**" />
+    <None Remove="Fonts\**" />
+    <Page Remove="Fonts\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Fonts\ja-jp.ttf" />
+    <None Remove="Resources\GenshinResinBackground.png" />
+    <None Remove="Resources\Icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Fonts\ja-jp.ttf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\GenshinResinBackground.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Icon.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
 
 </Project>
