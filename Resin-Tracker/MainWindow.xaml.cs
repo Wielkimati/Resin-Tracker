@@ -14,52 +14,119 @@ namespace Resin_Tracker
 	{
 		private Tracker tracker;
 		private Thread trackerThread;
-		private int currentResin;
-		private DateTime lastUpdateTime;
+		private readonly TaskbarIcon taskbarIcon;
+
+		private const int MaxResin = 160;
+		private const int MinutesPerResin = 8;
 
 		public MainWindow()
 		{
 			InitializeComponent();
 
-			ResetButton.Click += ResetButtonOnClick;
-			ResinBlock.MouseLeftButtonUp +=ResinBlockOnMouseLeftButtonUp;
+			ResetButton.Click += ResetButton_OnClick;
+			ResinBlock.GotFocus += ResinBlockOnGotFocus;
+			ResinBlock.KeyUp += ResinBlock_OnKeyUp;
+			ResinBlock.LostFocus += ResinBlock_OnLostFocus;
+			ResinBlock.Text = $"{Settings.Default.CurrentResinCount}/{MaxResin}";
 
-			ResinBlock.Text = $"{currentResin}/160";
-
-			var taskbarIcon = new TaskbarIcon {Icon = Properties.Resources.ResinIcon, ToolTipText = "Hello!"};
-			taskbarIcon.TrayLeftMouseDown += TaskbarIconOnTray_MouseClick;
+			taskbarIcon = new TaskbarIcon {Icon = Properties.Resources.ResinIcon, ToolTipText = Properties.Resources.UIText_Credits};
+			taskbarIcon.TrayMouseDoubleClick += TaskbarIconOnTray_MouseDoubleClick;
+			taskbarIcon.TrayToolTipOpen += TaskbarIcon_OnTrayBalloonTipShown;
 		}
 
 		#region UIActions
-		private void ResinBlockOnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+		private void ResinBlockOnGotFocus(object sender, RoutedEventArgs e)
 		{
-			ResinBlock.Text = "160/160";
+			ResinBlock.Text = Settings.Default.CurrentResinCount.ToString();
 		}
 
-		private void ResetButtonOnClick(object sender, RoutedEventArgs e)
+		private void ResinBlock_OnKeyUp(object sender, KeyEventArgs e)
 		{
-			ResinBlock.Text = "2137";
+			if (e.Key == Key.Enter)
+			{
+				var text = ResinBlock.Text;
+
+				if (!string.IsNullOrEmpty(text) && int.TryParse(text, out var input))
+				{
+					ResetSettings(input);
+					trackerThread.Interrupt();
+					StartTrackerThread(Settings.Default.CurrentResinCount);
+					Keyboard.ClearFocus();
+				}
+				else
+				{
+					Keyboard.ClearFocus();
+				}
+			}
+		}
+
+		private void ResinBlock_OnLostFocus(object sender, RoutedEventArgs e)
+		{
+			ResinBlock.Text = $"{Settings.Default.CurrentResinCount}/{MaxResin}";
+		}
+
+		private void ResetButton_OnClick(object sender, RoutedEventArgs e)
+		{
+			var result = MessageBox.Show(Properties.Resources.UIText_ResetQuestion, Properties.Resources.UIText_Credits, MessageBoxButton.YesNo);
+			switch (result)
+			{
+				case MessageBoxResult.Yes:
+					ResetSettings();
+					trackerThread.Interrupt();
+					StartTrackerThread(0);
+					break;
+
+				default:
+					break;
+			}
 		}
 		#endregion
 
 		#region Main Window Events
 		private void MainWindow_OnInitialized(object sender, EventArgs eventArgs)
 		{
-			if (Settings.Default.currentResinCount == 0 || Settings.Default.LastUpdateDate.Equals(null))
+			if (Settings.Default.CurrentResinCount == 0 && Settings.Default.LastUpdateDate.Equals(null))
 			{
-				Settings.Default.currentResinCount = 0;
-				Settings.Default.LastUpdateDate = DateTime.Now;
+				ResetSettings();
 			}
+			else
+			{
+				var ts = DateTime.Now - Settings.Default.LastUpdateDate;
+				if (ts.TotalMinutes > MinutesPerResin)
+				{
+					var resinToAdd = (int) ts.TotalMinutes / MinutesPerResin;
 
-			currentResin = Settings.Default.currentResinCount;
-			lastUpdateTime = Settings.Default.LastUpdateDate;
+					if (Settings.Default.CurrentResinCount + resinToAdd > MaxResin)
+					{
+						Settings.Default.CurrentResinCount = MaxResin;
+					}
+					else
+					{
+						Settings.Default.CurrentResinCount += resinToAdd;
+					}
 
-			StartTrackerThread(currentResin);
+					Settings.Default.LastUpdateDate = DateTime.Now;
+				}
+			}
+			Settings.Default.Save();
+
+			StartTrackerThread(Settings.Default.CurrentResinCount);
 		}
 
 		private void MainWindow_OnClosing(object sender, CancelEventArgs e)
 		{
+			trackerThread.Interrupt();
 			Settings.Default.Save();
+			taskbarIcon.Dispose();
+		}
+
+		private void TaskbarIconOnTray_MouseDoubleClick(object sender, RoutedEventArgs e)
+		{
+			if (WindowState == WindowState.Minimized)
+			{
+				WindowState = WindowState.Normal;
+				MainAppWindow.Activate();
+			}
 		}
 
 		private void MainWindow_OnStateChanged(object sender, EventArgs e)
@@ -67,21 +134,31 @@ namespace Resin_Tracker
 			ShowInTaskbar = WindowState != WindowState.Minimized;
 		}
 
-		private void TaskbarIconOnTray_MouseClick(object sender, RoutedEventArgs e)
+		private void TaskbarIcon_OnTrayBalloonTipShown(object sender, RoutedEventArgs e)
 		{
-			if (WindowState == WindowState.Minimized)
-			{
-				WindowState = WindowState.Normal;
-			}
+			var ts = Settings.Default.FinishDate - DateTime.Now;
+			taskbarIcon.ToolTipText = string.Join(string.Empty, $"{Settings.Default.CurrentResinCount}/{MaxResin} Resin", Environment.NewLine, ts.Hours, ":", ts.Minutes, ":", ts.Seconds, " Time Remaining");
 		}
 		#endregion
 
 		#region Private Methods
 		private void StartTrackerThread(int startResin)
 		{
-			tracker = new Tracker(startResin, new ResinUpdated(CounterCallback));
-			trackerThread = new Thread(new ThreadStart(tracker.Reset));
+			tracker = new Tracker(startResin, MaxResin, CounterCallback);
+			trackerThread = new Thread(tracker.Reset);
 			trackerThread.Start();
+		}
+
+		private static int GetMinutesUntilResinFull(int currentResin)
+		{
+			return (MaxResin - currentResin) * MinutesPerResin;
+		}
+
+		private static void ResetSettings(int startResin = 0)
+		{
+			Settings.Default.CurrentResinCount = startResin;
+			Settings.Default.LastUpdateDate = DateTime.Now;
+			Settings.Default.FinishDate = DateTime.Now.Add(TimeSpan.FromMinutes(GetMinutesUntilResinFull(startResin)));
 		}
 		#endregion
 
@@ -90,12 +167,10 @@ namespace Resin_Tracker
 		{
 			Dispatcher.Invoke(() =>
 				{
-					ResinBlock.Text = $"{resinCount}/160";
-					currentResin = resinCount;
-					Settings.Default.currentResinCount = currentResin;
-					lastUpdateTime = DateTime.Now;
-					Settings.Default.LastUpdateDate = lastUpdateTime;
+					Settings.Default.CurrentResinCount = resinCount;
+					Settings.Default.LastUpdateDate = DateTime.Now;
 					Settings.Default.Save();
+					ResinBlock.Text = $"{Settings.Default.CurrentResinCount}/{MaxResin}";
 				});
 		}
 		#endregion

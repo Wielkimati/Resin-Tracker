@@ -4,27 +4,36 @@ namespace Resin_Tracker
 {
 	public class Tracker
 	{
-		private const int MaxResin = 160;
+		private readonly int maxResin;
 		private int currentResin;
 		private readonly ResinUpdated updater;
 
-		public Tracker(int startResin, ResinUpdated updaterDelegate)
+		public Tracker(int startResin, int totalResin, ResinUpdated updaterDelegate)
 		{
 			currentResin = startResin;
+			maxResin = totalResin;
 			updater = updaterDelegate;
 		}
 
 		public void Reset()
 		{
-			do
+			try
 			{
-				Thread.Sleep(2000);
-				currentResin += 1;
 				updater?.Invoke(currentResin);
 
-			} while (currentResin < MaxResin);
+				do
+				{
+					Thread.Sleep(480000);
+					currentResin += 1;
+					updater?.Invoke(currentResin);
 
-			updater?.Invoke(currentResin);
+				} while (currentResin < maxResin);
+
+			}
+			catch (ThreadInterruptedException)
+			{
+			}
+
 		}
 	}
 }

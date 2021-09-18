@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Resin_Tracker"
         mc:Ignorable="d"
-        Title="Resin Tracker by Wielkimati" Height="119" Width="358" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Icon="Resources/Icon.png" ShowInTaskbar="True"
+        Name="MainAppWindow"  Title="Resin Tracker by Wielkimati" Height="119" Width="358" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Icon="Resources/Icon.png" ShowInTaskbar="True"
         Initialized="MainWindow_OnInitialized" Closing="MainWindow_OnClosing" StateChanged="MainWindow_OnStateChanged">
 
     <Window.Resources>
@@ -15,6 +15,6 @@
     <Grid>
         <Image Height="145" Width="345" HorizontalAlignment="Left" VerticalAlignment="Top" Source="Resources/GenshinResinBackground.png" Margin="0"/>
         <Button Name="ResetButton" Height="80" Width="100" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0" Background="Transparent" BorderThickness="0" BorderBrush="Transparent"/>
-        <TextBlock Name="ResinBlock" Height="60" Width="280" Text="160/160" FontSize="40" FontFamily="{StaticResource GenshinFont}" TextAlignment="Center" TextWrapping="NoWrap" Margin="50,10,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Background="Transparent" Foreground="#ece5d8"/>
+        <TextBox Name="ResinBlock" Height="60" Width="280" Text="160/160" MaxLength="3" MaxLines="1" FontSize="40" FontFamily="{StaticResource GenshinFont}" TextAlignment="Center" TextWrapping="NoWrap" Margin="50,10,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Background="Transparent" Foreground="#ece5d8" BorderBrush="Transparent" />
     </Grid>
 </Window>

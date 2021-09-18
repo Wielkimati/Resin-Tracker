@@ -127,4 +127,10 @@
   <data name="ResinIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ResinIcon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="UIText_Credits" xml:space="preserve">
+    <value>Resin Tracker by Wielkimati</value>
+  </data>
+  <data name="UIText_ResetQuestion" xml:space="preserve">
+    <value>Are you sure you want to reset your resin count back to 0?</value>
+  </data>
 </root>

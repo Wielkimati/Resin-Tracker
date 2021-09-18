@@ -5,8 +5,9 @@
     <TargetFramework>net5.0-windows</TargetFramework>
     <RootNamespace>Resin_Tracker</RootNamespace>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon />
+    <ApplicationIcon>Resources\ResinIcon.ico</ApplicationIcon>
     <Win32Resource />
+    <StartupObject>Resin_Tracker.App</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>

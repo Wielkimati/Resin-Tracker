@@ -26,12 +26,12 @@ namespace Resin_Tracker.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int currentResinCount {
+        public int CurrentResinCount {
             get {
-                return ((int)(this["currentResinCount"]));
+                return ((int)(this["CurrentResinCount"]));
             }
             set {
-                this["currentResinCount"] = value;
+                this["CurrentResinCount"] = value;
             }
         }
         
@@ -43,6 +43,17 @@ namespace Resin_Tracker.Properties {
             }
             set {
                 this["LastUpdateDate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime FinishDate {
+            get {
+                return ((global::System.DateTime)(this["FinishDate"]));
+            }
+            set {
+                this["FinishDate"] = value;
             }
         }
     }

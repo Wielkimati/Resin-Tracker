@@ -89,5 +89,23 @@ namespace Resin_Tracker.Properties {
                 return ((System.Drawing.Icon)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resin Tracker by Wielkimati.
+        /// </summary>
+        internal static string UIText_Credits {
+            get {
+                return ResourceManager.GetString("UIText_Credits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to reset your resin count back to 0?.
+        /// </summary>
+        internal static string UIText_ResetQuestion {
+            get {
+                return ResourceManager.GetString("UIText_ResetQuestion", resourceCulture);
+            }
+        }
     }
 }
