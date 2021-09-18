@@ -8,12 +8,27 @@
     <ApplicationIcon>Resources\ResinIcon.ico</ApplicationIcon>
     <Win32Resource />
     <StartupObject>Resin_Tracker.App</StartupObject>
+    <Authors>Wielkimati</Authors>
+    <Product>Resin Tracker</Product>
+    <NeutralLanguage>en</NeutralLanguage>
+    <RepositoryUrl>https://github.com/Wielkimati/Resin-Tracker</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Wielkimati/Resin-Tracker</PackageProjectUrl>
+    <PackageIcon>Icon.png</PackageIcon>
+    <PackageIconUrl />
+    <RepositoryType />
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>WielkimatiKey.pfx</AssemblyOriginatorKeyFile>
+    <DelaySign>true</DelaySign>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="Fonts\**" />
     <EmbeddedResource Remove="Fonts\**" />
     <None Remove="Fonts\**" />
+    <None Include="Resources\Icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
     <Page Remove="Fonts\**" />
   </ItemGroup>
 
