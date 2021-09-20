@@ -21,6 +21,10 @@
     <DelaySign>false</DelaySign>
     <AssemblyName>Resin Tracker</AssemblyName>
     <Version>1.0.1</Version>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Copyright>2021 Wielkimati</Copyright>
+    <Description>Lightweight Windows app that allows you to easily check how many resin you have without the need to open Genshin Impact.</Description>
+    <PackageTags>genshin-impact genshinimpact</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -32,6 +36,10 @@
     <Compile Remove="Fonts\**" />
     <EmbeddedResource Remove="Fonts\**" />
     <None Remove="Fonts\**" />
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
     <None Include="Resources\Icon.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
