@@ -56,5 +56,17 @@ namespace Resin_Tracker.Properties {
                 this["FinishDate"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool HasDataSaved {
+            get {
+                return ((bool)(this["HasDataSaved"]));
+            }
+            set {
+                this["HasDataSaved"] = value;
+            }
+        }
     }
 }

@@ -18,7 +18,13 @@
     <RepositoryType />
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>WielkimatiKey.pfx</AssemblyOriginatorKeyFile>
-    <DelaySign>true</DelaySign>
+    <DelaySign>false</DelaySign>
+    <AssemblyName>Resin Tracker</AssemblyName>
+    <Version>1.0.1</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

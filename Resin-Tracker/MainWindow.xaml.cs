@@ -5,6 +5,8 @@ using System.Windows;
 using System.Windows.Input;
 using Hardcodet.Wpf.TaskbarNotification;
 using Resin_Tracker.Properties;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
+using MessageBox = System.Windows.MessageBox;
 
 namespace Resin_Tracker
 {
@@ -26,7 +28,7 @@ namespace Resin_Tracker
 			ResetButton.Click += ResetButton_OnClick;
 			ResinBlock.GotFocus += ResinBlockOnGotFocus;
 			ResinBlock.KeyUp += ResinBlock_OnKeyUp;
-			ResinBlock.LostFocus += ResinBlock_OnLostFocus;
+			ResinBlock.LostKeyboardFocus += ResinBlock_OnKeyboardLostFocus;
 			ResinBlock.Text = $"{Settings.Default.CurrentResinCount}/{MaxResin}";
 
 			taskbarIcon = new TaskbarIcon {Icon = Properties.Resources.ResinIcon, ToolTipText = Properties.Resources.UIText_Credits};
@@ -42,25 +44,30 @@ namespace Resin_Tracker
 
 		private void ResinBlock_OnKeyUp(object sender, KeyEventArgs e)
 		{
-			if (e.Key == Key.Enter)
+			switch (e.Key)
 			{
-				var text = ResinBlock.Text;
+				case Key.Enter:
+				{
+					var text = ResinBlock.Text;
 
-				if (!string.IsNullOrEmpty(text) && int.TryParse(text, out var input))
-				{
-					ResetSettings(input);
-					trackerThread.Interrupt();
-					StartTrackerThread(Settings.Default.CurrentResinCount);
-					Keyboard.ClearFocus();
-				}
-				else
-				{
-					Keyboard.ClearFocus();
+					if (!string.IsNullOrEmpty(text) && int.TryParse(text, out var input))
+					{
+						ResetSettings(input);
+						trackerThread.Interrupt();
+						StartTrackerThread(Settings.Default.CurrentResinCount);
+						Keyboard.ClearFocus();
+					}
+					else
+					{
+						Keyboard.ClearFocus();
+					}
+
+					break;
 				}
 			}
 		}
 
-		private void ResinBlock_OnLostFocus(object sender, RoutedEventArgs e)
+		private void ResinBlock_OnKeyboardLostFocus(object sender, RoutedEventArgs e)
 		{
 			ResinBlock.Text = $"{Settings.Default.CurrentResinCount}/{MaxResin}";
 		}
@@ -85,7 +92,7 @@ namespace Resin_Tracker
 		#region Main Window Events
 		private void MainWindow_OnInitialized(object sender, EventArgs eventArgs)
 		{
-			if (Settings.Default.CurrentResinCount == 0 && Settings.Default.LastUpdateDate.Equals(null))
+			if (Settings.Default.HasDataSaved == false)
 			{
 				ResetSettings();
 			}
@@ -107,31 +114,37 @@ namespace Resin_Tracker
 
 					Settings.Default.LastUpdateDate = DateTime.Now;
 				}
-			}
-			Settings.Default.Save();
+				Settings.Default.Save();
 
-			StartTrackerThread(Settings.Default.CurrentResinCount);
+				StartTrackerThread(Settings.Default.CurrentResinCount);
+			}
 		}
 
 		private void MainWindow_OnClosing(object sender, CancelEventArgs e)
 		{
-			trackerThread.Interrupt();
+			trackerThread?.Interrupt();
 			Settings.Default.Save();
 			taskbarIcon.Dispose();
 		}
 
 		private void TaskbarIconOnTray_MouseDoubleClick(object sender, RoutedEventArgs e)
 		{
-			if (WindowState == WindowState.Minimized)
-			{
-				WindowState = WindowState.Normal;
-				MainAppWindow.Activate();
-			}
+			ShowInTaskbar = true;
+			MainAppWindow.Show();
+			MainAppWindow.Activate();
 		}
 
 		private void MainWindow_OnStateChanged(object sender, EventArgs e)
 		{
 			ShowInTaskbar = WindowState != WindowState.Minimized;
+			if (ShowInTaskbar == false)
+			{
+				MainAppWindow.Hide();
+			}
+			else
+			{
+				MainAppWindow.Activate();
+			}
 		}
 
 		private void TaskbarIcon_OnTrayBalloonTipShown(object sender, RoutedEventArgs e)
@@ -159,6 +172,7 @@ namespace Resin_Tracker
 			Settings.Default.CurrentResinCount = startResin;
 			Settings.Default.LastUpdateDate = DateTime.Now;
 			Settings.Default.FinishDate = DateTime.Now.Add(TimeSpan.FromMinutes(GetMinutesUntilResinFull(startResin)));
+			Settings.Default.HasDataSaved = true;
 		}
 		#endregion
 

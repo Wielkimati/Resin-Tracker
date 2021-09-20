@@ -2,7 +2,7 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Resin_Tracker.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="currentResinCount" Type="System.Int32" Scope="User">
+    <Setting Name="CurrentResinCount" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="LastUpdateDate" Type="System.DateTime" Scope="User">
@@ -10,6 +10,9 @@
     </Setting>
     <Setting Name="FinishDate" Type="System.DateTime" Scope="User">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="HasDataSaved" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>
