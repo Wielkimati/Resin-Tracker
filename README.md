@@ -49,7 +49,7 @@ You can easily access autostart folder by pressing Win + R and typing "shell:sta
 ![Example screenshot](https://github.com/Wielkimati/Resin-Tracker/blob/main/Screenshot.png?raw=true)
 
 - Clicking on resin icon allows you to reset your resin back to 0.
-- Clicking on resin counter text allows you to input your custom resin count (max. 3 numbers).
+- Clicking on resin counter text allows you to input your custom resin count (max. 3 numbers, confirm with Enter key).
 - Hovering over Resin Tracker icon on the system tray will show you a baloon with all necessary info, like current resin count and how long you need to wait until your resin is full.
 - You can also minimize Resin Tracker so only it's icon will show in system tray. Left-click 2 times on this icon to restore the program.
 
