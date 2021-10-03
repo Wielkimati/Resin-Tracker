@@ -15,7 +15,6 @@ Written in .Net 5.0.
 * [Known Issues](#known-issues)
 * [Contact](#contact)
 * [License](#license)
-* [Support](#support)
 
 
 ## General Information
@@ -64,7 +63,3 @@ if you'd like to contact me, I prefer Discord: Wielkimati#0720
 
 ## License
 [![Licence](https://img.shields.io/github/license/Ileriayo/markdown-badges?style=for-the-badge)](./LICENSE)
-
-## Support
-
-[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/wielkimati)
